@@ -66,6 +66,8 @@ public class DSSinhVien implements IO_Interface {
 	}
 
 	public void list() {
-
+		for (SinhVien s : ds) {
+			System.out.println(String.format("%d", s.maSV));
+		}
 	}
 }

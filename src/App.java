@@ -6,9 +6,15 @@ import javax.swing.*;
 public class App {
 	public static String menu() {
 		List<String> options = new ArrayList<String>();
-		options.add("Them 1 Khoa");
-		options.add("Them 1 sinh vien");
-		options.add("Xac dinh sinh vien co phai la sinh vien tai chuc?");
+		options.add("Nhap du lieu cho Khoa");
+		options.add("Them 1 Sinh Vien");
+		options.add("Xuat danh sach Sinh Vien cua Khoa");
+		options.add("Xac dinh Sinh Vien do co phai la Sinh Vien Tai Chuc");
+		options.add("Lay diem trung binh cac mon hoc cua Sinh Vien Tai Chuc dua vao 1 hoc ki cho truoc");
+		options.add("Xac dinh tong so Sinh Vien Tai Chuc cua Khoa");
+		options.add("Trong moi Khoa, tim ra Sinh Vien co diem trung binh hoc ky cao nhat (o bat ky hoc ky nao)");
+		options.add("Trong moi Khoa, sap xep danh sach Sinh Vien tang dan theo loai va giam dan theo nam vao hoc");
+		options.add("Trong moi Khoa, thong ke so luong Sinh Vien theo nam vao hoc");
 
 		String res = "\n";
 		int stt = 1;
@@ -23,22 +29,9 @@ public class App {
 		;
 
 		res += getLine(maxLength);
-		res += "\n(0). Thoat.";
+		res += "\n(0). Thoat chuong trinh";
 
 		return getLine(maxLength) + res;
-
-		// Notes:
-		// - Xac dinh sinh vien co phai la sinh vien tai chuc?
-		// - Lay diem trung binh cac mon hoc cua sinh vien tai chuc dua vao 1 hoc ki cho
-		// truoc.
-		// - Xac dinh tong so sinh vien tai chuc cua khoa.
-		// - Ở mỗi khoa, tìm ra sinh viên có điểm trung bình học kỳ cao nhất (ở bất kỳ
-		// học kỳ nào).
-		// - Ở mỗi khoa, sắp xếp danh sách sinh viên tăng dần theo loại và giảm dần theo
-		// năm vào học.
-		// - Ở mỗi khoa, thống kê số lượng sinh viên theo năm vào học.
-
-		// Thoat
 	}
 
 	public static String getLine(int number) {
@@ -52,15 +45,15 @@ public class App {
 	public static String ShowMyInfor() {
 		HashMap<String, String> team = new HashMap<String, String>();
 
-		team.put("2080600803", "Trương Thục Vân");
-		team.put("2080600246", "Hoàng Tiến Đạt");
-		team.put("2011063152", "Bùi Thành Đạt");
-		team.put("2080600759", "Huỳnh Nhật Trường");
-		team.put("2080600763", "Phạm Huỳnh Nhật Trường");
-		team.put("2011253052", "Nguyễn Quốc Kha");
-		team.put("2080600919", "Lê Ngọc Thuận");
-		team.put("2080600914", "Nguyễn Hồng Thái");
-		team.put("2011060485", "Trần Đăng Khoa");
+		team.put("2080600803", "Truoc Thuc Van");
+		team.put("2080600246", "Hoan Tien Dat");
+		team.put("2011063152", "Bui Thanh Dat");
+		team.put("2080600759", "Huynh Nhat Truong");
+		team.put("2080600763", "Pham Huynh Nhat Truong");
+		team.put("2011253052", "Nguyen Quoc Kha");
+		team.put("2080600919", "Le Ngoc Thuan");
+		team.put("2080600914", "Nguyen Hong Thai");
+		team.put("2011060485", "Tran Dang Khoa");
 
 		String teamName = String.format("%20s", "       > [NHÓM 2 - HUTECH] <");
 		// header
@@ -103,65 +96,155 @@ public class App {
 		return res;
 	}
 
+	public static ArrayList<SinhVien> genDssv() {
+		ArrayList<SinhVien> dssv = new ArrayList<SinhVien>();
+		for (int i = 0; i < getRandomInt(1, 8); i++) {
+			SinhVien sv = null;
+			NgayThangNam ntn = new NgayThangNam(getRandomInt(1, 30), getRandomInt(1, 12), getRandomInt(0, 2000));
+			if (getRandomBoolean() == true)
+				sv = new SinhVienTaiChuc(i, getRandomString(10), ntn, getRandomInt(0, 2022), getRandomDouble(1, 30),
+						(HashMap<Integer, Double>) genKqHt().clone(), getLine(10));
+			else
+				sv = new SinhVienChinhQuy(i, getRandomString(10), ntn, getRandomInt(0, 2022), getRandomDouble(1, 30),
+						(HashMap<Integer, Double>) genKqHt().clone());
+			dssv.add(sv);
+		}
+		return dssv;
+	}
+
+	public static int getRandomInt(int min, int max) {
+		return (int) (Math.random() * (max - min) + min);
+	}
+
+	public static double getRandomDouble(int min, int max) {
+		return (Math.random() * (max - min) + min);
+	}
+
+	public static String getRandomString(int length) {
+		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		StringBuilder sb = new StringBuilder();
+		Random random = new Random();
+		for (int i = 0; i < length; i++) {
+			int index = random.nextInt(alphabet.length());
+			char randomChar = alphabet.charAt(index);
+			sb.append(randomChar);
+		}
+		return sb.toString();
+	}
+
+	public static boolean getRandomBoolean() {
+		Random random = new Random();
+		return random.nextBoolean();
+	}
+
 	public static void main(String[] args) throws Exception {
 		System.out.println(ShowMyInfor());
 		System.out.println(menu());
 
 		Khoa khoa = new Khoa();
-		NgayThangNam ngaysinh = new NgayThangNam();
-		ngaysinh.input();
-		HashMap<Integer, Double> kqHt = (HashMap<Integer, Double>) genKqHt().clone();
-		SinhVienTaiChuc tc1 = new SinhVienTaiChuc(1, "Truong Thuc Thuc", ngaysinh,2001, 5, kqHt, "noiLKDaoTao");
-		SinhVienTaiChuc tc2 = new SinhVienTaiChuc(2, "Schjr", ngaysinh, 2002, 6, kqHt, noiLKDaoTao);
-		SinhVienChinhQuy cq3 = new SinhVienChinhQuy(3, "Truong Van Van", ngaysinh, 2003, 10, kqHt, "noiLKDaoTao");
+		// khoa.setTenKhoa("Tran Dang Khoa");
+		// NgayThangNam ngaysinh = new NgayThangNam(1, 2, 3);
+		// // ngaysinh.input();
+		// HashMap<Integer, Double> kqHt = (HashMap<Integer, Double>) genKqHt().clone();
+		// SinhVienTaiChuc tc1 = new SinhVienTaiChuc(1, "Truong Thuc Thuc", ngaysinh,
+		// 2001, 5, kqHt, "noiLKDaoTao");
+		// SinhVienChinhQuy cq3 = new SinhVienChinhQuy(3, "Truong Van Van", ngaysinh,
+		// 1999, 10, kqHt);
+		// SinhVienTaiChuc tc2 = new SinhVienTaiChuc(2, "Schjr", ngaysinh, 2002, 6,
+		// kqHt, "popo station");
 
-		khoa.getDsSinhVien().add(tc1);
-		khoa.getDsSinhVien().add(tc2);
-		khoa.getDsSinhVien().add(cq3);
-		// khoa.input();
-		System.out.println(khoa.output());
-		khoa.sortTangLoaiGiamNam();
-		System.out.println(khoa.output());
+		// khoa.getDsSinhVien().add(tc1);
+		// khoa.getDsSinhVien().add(tc2);
+		// khoa.getDsSinhVien().add(cq3);
+		// // khoa.input();
+		// System.out.println("---------------------------\nTRUOC KHI SORT\n" +
+		// khoa.output());
+		// khoa.sortTangLoaiGiamNam();
+		// System.out.println("---------------------------\nDA SORT\n" + khoa.output());
 
 		// Khoa k1 = new Khoa();
 		// k1.input();
 		// System.out.println(k1.output());
 
-		// for (;;) {
-		// System.out.println(menu());
+		for (;;) {
+			// System.out.println(menu());
+			int option = 0;
+			boolean error = false;
+			do {
+				try {
+					String str = JOptionPane.showInputDialog(menu(), "0");
+					if (str == null || str.trim().isEmpty()) {
+						option = 0;
+						break;
+					}
+					option = Integer.parseInt(str);
+					if ((option < 0) || (option > 8)) {
+						error = true;
+					}
+				} catch (NumberFormatException e) {
+					// TODO: handle exception
+					error = true;
+				}
+				if (error == true)
+					JOptionPane.showMessageDialog(null, "Khong co lua chon phu hop", "Loi", JOptionPane.ERROR_MESSAGE);
+			} while (error == true);
 
-		// do {
-		// // System.out.println("Chon: ");
-		// // option = sc.nextInt();
-		// // sc.nextLine();
-		// // if ((option < 0) || (option > 3)) {
-		// // // clearScreen();
-		// // System.out.println("Invalid input!");
-		// // System.out.println(menu());
-		// // }
-		// } while ((0 < 0) || (0 > 3));
+			switch (option) {
+				case 1: // Them 1 Khoa
+					khoa.input();
+					break;
+				case 2: // Them 1 Sinh Vien
+					if (khoa.getTenKhoa() == null) {
+						JOptionPane.showMessageDialog(null, "Ban chua nhap du lieu cho khoa! (1)", "Loi",
+								JOptionPane.ERROR_MESSAGE);
+						break;
+					}
+					SinhVien sv;
+					Object[] options = { "Sinh Vien Chinh Quy",
+							"Sinh Vien Tai Chuc" };
+					int n = JOptionPane.showOptionDialog(null, null, "Lua chon", JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+					if (n == JOptionPane.YES_OPTION)
+						sv = new SinhVienChinhQuy();
+					else
+						sv = new SinhVienTaiChuc();
+					if (sv.input() == 0)
+						khoa.getDsSinhVien().add(sv);
+					break;
+				case 3: // Xac dinh Sinh Vien do co phai la Sinh Vien Tai Chuc
+					
+					break;
+				case 3: // Xac dinh Sinh Vien do co phai la Sinh Vien Tai Chuc
 
-		// switch (0) {
-		// case 1:
+					break;
+				case 4: // Lay diem trung binh cac mon hoc cua Sinh Vien Tai Chuc dua vao 1 hoc ki cho
+						// truoc
 
-		// break;
+					break;
+				case 5: // Xac dinh tong so Sinh Vien Tai Chuc cua Khoa
 
-		// case 2:
+					break;
+				case 6: // Trong moi Khoa, tim ra Sinh Vien co diem trung binh hoc ky cao nhat (o bat ky
+						// hoc ky nao)
 
-		// break;
-
-		// case 3:
-
-		// break;
-
-		// default:
-		// // clearScreen();
-		// // sc.close();
-		// System.out.println("Thoat!");
-		// System.exit(0);
-		// break;
-		// }
-		// }
+					break;
+				case 7: // Trong moi Khoa, sap xep danh sach Sinh Vien tang dan theo loai va giam dan
+						// theo nam vao hoc
+					khoa.sortTangLoaiGiamNam();
+					break;
+				case 8: // Trong moi Khoa, thong ke so luong Sinh Vien theo nam vao hoc
+					khoa.thongKeSLTheoNamHoc();
+					break;
+				default:
+					// clearScreen();
+					// sc.close();
+					int isContinue = JOptionPane.showConfirmDialog(null, "Ban co muon ket thuc?", "Thoat",
+							JOptionPane.YES_NO_OPTION);
+					if (isContinue == JOptionPane.YES_OPTION)
+						System.exit(0);
+					break;
+			}
+		}
 
 	}
 }

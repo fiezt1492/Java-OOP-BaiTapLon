@@ -14,6 +14,7 @@ public class Khoa implements IO_Interface, Comparable<Khoa> {
 	public static Hashtable<Integer, Integer> DS_SLSVTheoNamHoc = new Hashtable<Integer, Integer>();
 
 	public Khoa() {
+		this.dsSinhVien = new DSSinhVien();
 	}
 
 	public Khoa(String tenKhoa, DSSinhVien dsSinhVien) {
@@ -53,12 +54,19 @@ public class Khoa implements IO_Interface, Comparable<Khoa> {
 	@Override
 	public int input() {
 		// TODO Auto-generated method stub
-		String str = JOptionPane.showInputDialog(null, "Nhap Ten Khoa: ", "0");
-		if (str == null) return -1;
+		String str = null;
+
+		do {
+			str = JOptionPane.showInputDialog(null, "Nhap Ten Khoa: ", "0");
+			if (str == null)
+				return -1;
+		} while (str.trim().isEmpty());
+
 		String tenKhoaTemp = str;
 		JOptionPane.showMessageDialog(null, "Nhap Danh Sach Sinh Vien");
 		DSSinhVien dssvTemp = new DSSinhVien();
-		if (dssvTemp.input() != 0) return -1;
+		if (dssvTemp.input() != 0)
+			return -1;
 		this.tenKhoa = tenKhoaTemp;
 		this.dsSinhVien = new DSSinhVien(dssvTemp);
 		return 0;
@@ -127,30 +135,26 @@ public class Khoa implements IO_Interface, Comparable<Khoa> {
 		}
 		dsSVMaxDTB.add(svMax);
 		System.out.println("Danh sach sinh vien co diem trung binh hoc ki cao nhat");
-		dsSVMaxDTB.output();
+		System.out.println(dsSVMaxDTB.output());
 	}
 
 	public void sortTangLoaiGiamNam() {
 		Collections.sort(dsSinhVien.getDssv(), new Comparator<SinhVien>() {
 			@Override
 			public int compare(SinhVien o1, SinhVien o2) {
-				return (o1.isSVTaiChuc() ? 1 : 0) - (o2.isSVTaiChuc() ? 1 : 0);
+				return o2.getNamHoc() - o1.getNamHoc();
 			}
 		});
 		Collections.sort(dsSinhVien.getDssv(), new Comparator<SinhVien>() {
 			@Override
 			public int compare(SinhVien o1, SinhVien o2) {
-				return o1.getNamHoc() - o2.getNamHoc();
+				return (o1.isSVTaiChuc() ? 1 : 0) - (o2.isSVTaiChuc() ? 1 : 0);
 			}
 		});
 	}
 
 	public void thongKeSLTheoNamHoc() {
-		// https://shareprogramming.net/huong-dan-su-dung-dictionary-trong-java/
-		// arraylist 1 : 2017 2018 2020
-		// arraylist 2 : 10 9 8
-		//
-		// DS_SLSVTheoNamHoc
+
 		System.out.println("Danh sach So luong Sinh Vien theo nam hoc");
 
 		for (int key : getDS_SLSVTheoNamHoc().keySet()) {

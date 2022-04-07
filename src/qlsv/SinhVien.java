@@ -100,7 +100,8 @@ public abstract class SinhVien implements IO_Interface {
             check = false;
             try {
                 str = JOptionPane.showInputDialog(null, "Nhap Ma so Sinh Vien: ", "0");
-                if (str == null) return -1;
+                if (str == null)
+                    return -1;
                 maSVTemp = Integer.parseInt(str);
                 check = true;
             } catch (NumberFormatException e1) {
@@ -108,17 +109,22 @@ public abstract class SinhVien implements IO_Interface {
             }
         } while (maSVTemp < 0 || check == false);
 
-        str = JOptionPane.showInputDialog("Nhap Ho ten Sinh Vien: ");
-        if (str == null) return -1;
-        hoTenTemp = str;
-        
-        if (ngaySinhTemp.input() == -1) return -1;
+        do {
+            str = JOptionPane.showInputDialog("Nhap Ho ten Sinh Vien: ");
+            if (str == null)
+                return -1;
+            hoTenTemp = str;
+        } while (hoTenTemp.length() == 0 || hoTenTemp.trim().isEmpty());
+
+        if (ngaySinhTemp.input() == -1)
+            return -1;
 
         do {
             check = false;
             try {
                 str = JOptionPane.showInputDialog(null, "Nhap Nam vao hoc: ", "0");
-                if (str == null) return -1;
+                if (str == null)
+                    return -1;
                 namHocTemp = Integer.parseInt(str);
                 check = true;
             } catch (NumberFormatException e1) {
@@ -130,7 +136,8 @@ public abstract class SinhVien implements IO_Interface {
             try {
                 check = false;
                 str = JOptionPane.showInputDialog(null, "Nhap Diem dau vao: ", "0");
-                if (str == null) return -1;
+                if (str == null)
+                    return -1;
                 diemDVTemp = Double.parseDouble(str);
                 check = true;
             } catch (NumberFormatException e1) {
@@ -139,7 +146,8 @@ public abstract class SinhVien implements IO_Interface {
         } while (diemDVTemp < 0 || check == false);
         JOptionPane.showMessageDialog(null, "Nhap Danh sach ket qua hoc tap");
 
-        kqHtInput(hoTenTemp);
+        if (kqHtInput(hoTenTemp) == -1)
+            return -1;
 
         Integer sl = Khoa.getDS_SLSVTheoNamHoc().get(this.namHoc);
         if (sl == null) {
@@ -157,7 +165,7 @@ public abstract class SinhVien implements IO_Interface {
         return 0;
     }
 
-    public void kqHtInput(String ht) {
+    public int kqHtInput(String ht) {
         int cont = JOptionPane.DEFAULT_OPTION;
         String str;
         do {
@@ -166,31 +174,48 @@ public abstract class SinhVien implements IO_Interface {
             double value = 0;
             do {
                 try {
-                    str = JOptionPane.showInputDialog(null, "Nhap hoc ki: ", key);
+                    str = JOptionPane.showInputDialog(null, kqHtOuput() + "\n----------\nNhap hoc ki: ", key);
+                    if (str == null)
+                        return -1;
                     key = Integer.parseInt(str);
                     error = false;
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "Nhap khong hop le ");
                     error = true;
                 }
+
+                if (key <= 0)
+                    error = true;
+
+                if (error == true)
+                    JOptionPane.showMessageDialog(null, "Nhap khong hop le ");
             } while (error == true);
 
             do {
                 try {
-                    str = JOptionPane.showInputDialog(null, String.format("Nhap diem trung binh hoc ky %d: ", key),
+                    str = JOptionPane.showInputDialog(null,
+                            String.format("%s\n----------\nNhap diem trung binh hoc ky %d: ", kqHtOuput(), key),
                             "0");
+                    if (str == null)
+                        return -1;
                     value = Double.parseDouble(str);
                     error = false;
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "Nhap Khong Hop Le ");
                     error = true;
                 }
+
+                if (value < 0 || value > 10)
+                    error = true;
+
+                if (error == true)
+                    JOptionPane.showMessageDialog(null, "Nhap khong hop le ");
             } while (error == true);
             this.kqHt.put(key, value);
 
-            cont = JOptionPane.showConfirmDialog(null, String.format("Ban co muon tiep tuc nhap diem cho %s?", ht),
+            cont = JOptionPane.showConfirmDialog(null,
+                    String.format("Ban co muon tiep tuc nhap diem cho %s?\n----------\n%s", ht, kqHtOuput()),
                     "Xac nhan", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         } while (cont == JOptionPane.YES_OPTION);
+        return 0;
     }
 
     public String kqHtOuput() {
@@ -211,7 +236,7 @@ public abstract class SinhVien implements IO_Interface {
         // SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String res = "";
         res += "Ma so Sinh vien: " + getMaSV() + "\n";
-        res += "Ho ten Sinh vien: " + getHoTen() + "\n";
+        res += "Ho ten Sinh vien: " + getHoTen() + " Tai Chuc: " + isSVTaiChuc() + "\n";
         res += "Ngay sinh: " + getNgaySinh().output() + "\n";
         res += "Nam vao hoc: " + getNamHoc() + "\n";
         res += "Diem dau vao: " + getDiemDV() + "\n";

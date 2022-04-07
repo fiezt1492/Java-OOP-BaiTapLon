@@ -18,6 +18,10 @@ public class NgayThangNam implements IO_Interface {
 		this.date = (Calendar) d.date.clone();
 	}
 
+	public NgayThangNam(int day, int month, int year) {
+		this.date = new GregorianCalendar(day, month, year);
+	}
+
 	@Override
 	public int input() {
 		Calendar temp = null;
@@ -58,7 +62,7 @@ public class NgayThangNam implements IO_Interface {
 				error = true;
 			}
 		} while (error == true);
-		this.date = temp;
+		this.date = (GregorianCalendar) temp.clone();
 		return 0;
 	}
 	// public boolean isHopLe(ngay, thang, nam) {
@@ -95,7 +99,7 @@ public class NgayThangNam implements IO_Interface {
 	public String output() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		String res = "";
-		res += sdf.format(date.getTime()) + "\n";
+		res += sdf.format(date.getTime());
 		return res;
 	}
 }
