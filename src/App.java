@@ -212,9 +212,6 @@ public class App {
 						khoa.getDsSinhVien().add(sv);
 					break;
 				case 3: // Xac dinh Sinh Vien do co phai la Sinh Vien Tai Chuc
-					
-					break;
-				case 3: // Xac dinh Sinh Vien do co phai la Sinh Vien Tai Chuc
 
 					break;
 				case 4: // Lay diem trung binh cac mon hoc cua Sinh Vien Tai Chuc dua vao 1 hoc ki cho
