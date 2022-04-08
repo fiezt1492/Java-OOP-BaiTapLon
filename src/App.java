@@ -267,8 +267,6 @@ public class App {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println(ShowMyInfor());
-		// System.out.println(menu());
-
 		Khoa khoa = new Khoa();
 		AppInterface(khoa);
 	}

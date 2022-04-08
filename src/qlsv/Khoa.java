@@ -52,11 +52,11 @@ public class Khoa implements IO_Interface {
 
 	public static void increaseSL(int key) {
 		Integer sl = DS_SLSVTheoNamHoc.get(key);
-        if (sl == null) {
-            DS_SLSVTheoNamHoc.put(key, 1);
-        } else if (sl > 0) {
-            DS_SLSVTheoNamHoc.put(key, sl + 1);
-        }
+		if (sl == null) {
+			DS_SLSVTheoNamHoc.put(key, 1);
+		} else if (sl > 0) {
+			DS_SLSVTheoNamHoc.put(key, sl + 1);
+		}
 	}
 
 	@Override
@@ -100,38 +100,48 @@ public class Khoa implements IO_Interface {
 	}
 
 	public void Max_diemTBHocKy(int hocKy) {
-		// nhap ten hoc ky can tim
-		// int tenHocKyCanTim;
-		// String str = JOptionPane.showInputDialog(null, "Nhap Ten Hoc Ky can tim: ",
-		// "0");
-		// this.tenHocKyCanTim = Integer.parseInt(str);
-
-		// tim max
-		// getDiemTBTheoHocKy(int tenHocKy)
-		// Arraylist
 		if (dsSinhVien.getDssv().isEmpty()) {
 			System.out.println("Danh sach rong");
+			return;
+		}
+		if (!dsSinhVien.isHocKyExist(hocKy)) {
+			System.out.println("Khong ton tai hoc ky " + hocKy);
 			return;
 		}
 		DSSinhVien dsSVMaxDTB = new DSSinhVien();
 		SinhVien svMax = dsSinhVien.getDssv().get(0);
 		double diem, diemMax;
-		for (SinhVien s : dsSinhVien.getDssv()) {
-			diem = (s.getKqHt().get(hocKy) == null) ? 0 : s.getKqHt().get(hocKy);
-			diemMax = (svMax.getKqHt().get(hocKy) == null) ? 0 : svMax.getKqHt().get(hocKy);
+		// boolean flag = false;
+		for (int i = 1; i < dsSinhVien.getDssv().size(); i++) {
+			// kiem tra neu diem hoc ky do co ton tai hay khong
 
-			if (diem == diemMax)
-				dsSVMaxDTB.add(s);
+			if (svMax.getKqHt().get(hocKy) == null) {
+				svMax = dsSinhVien.getDssv().get(i);
+				continue;
+			}
+
+			if (dsSinhVien.getDssv().get(i).getKqHt().get(hocKy) == null)
+				continue;
+
+			diemMax = svMax.getKqHt().get(hocKy);
+			diem = dsSinhVien.getDssv().get(i).getKqHt().get(hocKy);
+
+			// all good
+			if (diem == diemMax) {
+				dsSVMaxDTB.add(dsSinhVien.getDssv().get(i));
+			}
+				
 			if (diem > diemMax) {
 				if (dsSVMaxDTB.getDssv().size() > 0) {
 					dsSVMaxDTB = new DSSinhVien();
 					System.gc();
 				}
-				svMax = s;
+				svMax = dsSinhVien.getDssv().get(i);
 			}
 		}
 		dsSVMaxDTB.add(svMax);
-		System.out.println("Danh sach sinh vien co diem trung binh hoc ki cao nhat cua hoc ky " + hocKy);
+
+		System.out.println("> Danh sach sinh vien co diem trung binh hoc ki cao nhat cua hoc ky " + hocKy);
 		System.out.println(dsSVMaxDTB.output());
 	}
 
@@ -155,11 +165,11 @@ public class Khoa implements IO_Interface {
 			System.out.println("Danh sach rong");
 			return;
 		}
-		
-		System.out.println("Danh sach So luong Sinh Vien theo nam hoc");
 
+		System.out.println("Danh sach So luong Sinh Vien theo nam hoc");
+		System.out.println(String.format("%10s: %-10s", "Nam Hoc", "So luong"));
 		for (int key : getDS_SLSVTheoNamHoc().keySet()) {
-			System.out.println(key + ": " + DS_SLSVTheoNamHoc.get(key));
+			System.out.println(String.format("%10d: %-10d", key, DS_SLSVTheoNamHoc.get(key)));
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package qlsv;
 
 import java.util.ArrayList;
+import java.util.Map;
+
 import javax.swing.JOptionPane;
 
 import util.IO_Interface;
@@ -30,6 +32,17 @@ public class DSSinhVien implements IO_Interface {
 
 	public void add(SinhVien sv) {
 		ds.add(sv);
+	}
+
+	public boolean isHocKyExist(int tenHocKy) {
+		boolean flag = false;
+		for (SinhVien s : ds) {
+			for (Map.Entry d : s.getKqHt().entrySet()) {
+				if ((int) d.getKey() == tenHocKy)
+					flag = true;
+			}
+		}
+		return flag;
 	}
 
 	public int input() {

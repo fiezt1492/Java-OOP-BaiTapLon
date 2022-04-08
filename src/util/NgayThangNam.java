@@ -65,9 +65,6 @@ public class NgayThangNam implements IO_Interface {
 		this.date = (GregorianCalendar) temp.clone();
 		return 0;
 	}
-	// public boolean isHopLe(ngay, thang, nam) {
-	// if (ngay < 1 || ngay > )
-	// }
 
 	private boolean isValidDate(String input) {
 		String formatString = "MM/dd/yyyy";

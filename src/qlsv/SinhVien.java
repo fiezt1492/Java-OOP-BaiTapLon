@@ -239,7 +239,6 @@ public abstract class SinhVien implements IO_Interface {
 
     public String output() {
         // TODO Auto-generated method stub
-        // SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String res = "";
         res += "Ma so Sinh vien: " + getMaSV() + "\n";
         res += "Ho ten Sinh vien: " + getHoTen() + " Tai Chuc: " + isSVTaiChuc() + "\n";
