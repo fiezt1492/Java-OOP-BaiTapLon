@@ -65,9 +65,21 @@ public class DSSinhVien implements IO_Interface {
 		return s;
 	}
 
-	public void list() {
+	public String list() {
+		String res = String.format("%10s | %-30s | %15s | %7s | %5s | %20s", "MASV", "HO TEN", "NGAY SINH",
+				"NAM HOC", "DDV", "NOI LKDT");
+		res += "\n";
+		res += "------------------------------------------------------------------------------------------------------";
+		res += "\n";
 		for (SinhVien s : ds) {
-			System.out.println(String.format("%d", s.maSV));
+			res += String.format("%10d | %-30s | %15s | %7d | %05.2f | %20s", s.getMaSV(), s.getHoTen(),
+					s.getNgaySinhString(),
+					s.getNamHoc(), s.getDiemDV(),
+					(s.isSVTaiChuc()) ? ((SinhVienTaiChuc) s).getNoiLKDaoTao() : "Khong");
+			res += "\n";
 		}
+		res += "------------------------------------------------------------------------------------------------------";
+		res += "\n";
+		return res;
 	}
 }

@@ -4,7 +4,7 @@ import java.util.*;
 import javax.swing.*;
 
 public class App {
-	public static String menu() {
+	public static List<String> menu() {
 		List<String> options = new ArrayList<String>();
 		options.add("Nhap du lieu cho Khoa");
 		options.add("Them 1 Sinh Vien");
@@ -15,7 +15,12 @@ public class App {
 		options.add("Trong moi Khoa, tim ra Sinh Vien co diem trung binh hoc ky cao nhat (o bat ky hoc ky nao)");
 		options.add("Trong moi Khoa, sap xep danh sach Sinh Vien tang dan theo loai va giam dan theo nam vao hoc");
 		options.add("Trong moi Khoa, thong ke so luong Sinh Vien theo nam vao hoc");
+		options.add("Sinh ngau nhien danh sach sinh vien");
 
+		return options;
+	}
+
+	public static String menuToString(List<String> options) {
 		String res = "\n";
 		int stt = 1;
 		int maxLength = 0;
@@ -45,8 +50,8 @@ public class App {
 	public static String ShowMyInfor() {
 		HashMap<String, String> team = new HashMap<String, String>();
 
-		team.put("2080600803", "Truoc Thuc Van");
-		team.put("2080600246", "Hoan Tien Dat");
+		team.put("2080600803", "Truong Thuc Van");
+		team.put("2080600246", "Hoang Tien Dat");
 		team.put("2011063152", "Bui Thanh Dat");
 		team.put("2080600759", "Huynh Nhat Truong");
 		team.put("2080600763", "Pham Huynh Nhat Truong");
@@ -96,14 +101,14 @@ public class App {
 		return res;
 	}
 
-	public static ArrayList<SinhVien> genDssv() {
+	public static ArrayList<SinhVien> genDssv(int amount) {
 		ArrayList<SinhVien> dssv = new ArrayList<SinhVien>();
-		for (int i = 0; i < getRandomInt(1, 8); i++) {
+		for (int i = 0; i < amount; i++) {
 			SinhVien sv = null;
 			NgayThangNam ntn = new NgayThangNam(getRandomInt(1, 30), getRandomInt(1, 12), getRandomInt(0, 2000));
 			if (getRandomBoolean() == true)
 				sv = new SinhVienTaiChuc(i, getRandomString(10), ntn, getRandomInt(0, 2022), getRandomDouble(1, 30),
-						(HashMap<Integer, Double>) genKqHt().clone(), getLine(10));
+						(HashMap<Integer, Double>) genKqHt().clone(), getRandomString(10));
 			else
 				sv = new SinhVienChinhQuy(i, getRandomString(10), ntn, getRandomInt(0, 2022), getRandomDouble(1, 30),
 						(HashMap<Integer, Double>) genKqHt().clone());
@@ -137,51 +142,22 @@ public class App {
 		return random.nextBoolean();
 	}
 
-	public static void main(String[] args) throws Exception {
-		System.out.println(ShowMyInfor());
-		System.out.println(menu());
-
-		Khoa khoa = new Khoa();
-		// khoa.setTenKhoa("Tran Dang Khoa");
-		// NgayThangNam ngaysinh = new NgayThangNam(1, 2, 3);
-		// // ngaysinh.input();
-		// HashMap<Integer, Double> kqHt = (HashMap<Integer, Double>) genKqHt().clone();
-		// SinhVienTaiChuc tc1 = new SinhVienTaiChuc(1, "Truong Thuc Thuc", ngaysinh,
-		// 2001, 5, kqHt, "noiLKDaoTao");
-		// SinhVienChinhQuy cq3 = new SinhVienChinhQuy(3, "Truong Van Van", ngaysinh,
-		// 1999, 10, kqHt);
-		// SinhVienTaiChuc tc2 = new SinhVienTaiChuc(2, "Schjr", ngaysinh, 2002, 6,
-		// kqHt, "popo station");
-
-		// khoa.getDsSinhVien().add(tc1);
-		// khoa.getDsSinhVien().add(tc2);
-		// khoa.getDsSinhVien().add(cq3);
-		// // khoa.input();
-		// System.out.println("---------------------------\nTRUOC KHI SORT\n" +
-		// khoa.output());
-		// khoa.sortTangLoaiGiamNam();
-		// System.out.println("---------------------------\nDA SORT\n" + khoa.output());
-
-		// Khoa k1 = new Khoa();
-		// k1.input();
-		// System.out.println(k1.output());
-
+	public static void AppInterface(Khoa khoa) {
 		for (;;) {
 			// System.out.println(menu());
 			int option = 0;
 			boolean error = false;
 			do {
+				error = false;
 				try {
-					String str = JOptionPane.showInputDialog(menu(), "0");
-					if (str == null || str.trim().isEmpty()) {
-						option = 0;
+					String str = JOptionPane.showInputDialog(menuToString(menu()), "0");
+					if (str == null)
 						break;
-					}
 					option = Integer.parseInt(str);
-					if ((option < 0) || (option > 8)) {
+					if ((option < 0) || (option > menu().size())) {
 						error = true;
 					}
-				} catch (NumberFormatException e) {
+				} catch (Exception e) {
 					// TODO: handle exception
 					error = true;
 				}
@@ -211,26 +187,70 @@ public class App {
 					if (sv.input() == 0)
 						khoa.getDsSinhVien().add(sv);
 					break;
-				case 3: // Xac dinh Sinh Vien do co phai la Sinh Vien Tai Chuc
-
+				case 3: // Xuat danh sach Sinh Vien cua Khoa
+					System.out.println(khoa.output());
 					break;
-				case 4: // Lay diem trung binh cac mon hoc cua Sinh Vien Tai Chuc dua vao 1 hoc ki cho
+				case 4: // Xac dinh Sinh Vien do co phai la Sinh Vien Tai Chuc
+					for (SinhVien sVien : khoa.getDsSinhVien().getDssv()) {
+						if (sVien.isSVTaiChuc())
+							System.out.println(sVien.output());
+					}
+					break;
+				case 5: // Lay diem trung binh cac mon hoc cua Sinh Vien Tai Chuc dua vao 1 hoc ki cho
 						// truoc
-
+					String str;
+					boolean error1 = false;
+					int key = 0;
+					do {
+						error1 = false;
+						try {
+							str = JOptionPane.showInputDialog(null, "Nhap hoc ki can tim: ", key);
+							key = Integer.parseInt(str);
+							error1 = false;
+						} catch (NumberFormatException e) {
+							JOptionPane.showMessageDialog(null, "Nhap khong hop le ");
+							error1 = true;
+						}
+					} while (error1 == true);
+					System.out.println("> Danh sach diem trung binh hoc ky " + key + " cua sinh vien tai chuc <");
+					for (SinhVien sVien : khoa.getDsSinhVien().getDssv()) {
+						if (sVien.getDTB_SVTaiChuc(key) != -1)
+							System.out.println("Ten: " + sVien.getHoTen() + " | Diem: " + sVien.getDTB_SVTaiChuc(key));
+					}
 					break;
-				case 5: // Xac dinh tong so Sinh Vien Tai Chuc cua Khoa
-
+				case 6: // Xac dinh tong so Sinh Vien Tai Chuc cua Khoa
+					System.out.println("> So Luong SV Tai Chuc: " + khoa.tong_SVTaiChuc());
 					break;
-				case 6: // Trong moi Khoa, tim ra Sinh Vien co diem trung binh hoc ky cao nhat (o bat ky
+
+				case 7: // Trong moi Khoa, tim ra Sinh Vien co diem trung binh hoc ky cao nhat (o bat ky
 						// hoc ky nao)
-
+					String str1;
+					boolean error2 = false;
+					int key1 = 0;
+					do {
+						error2 = false;
+						try {
+							str1 = JOptionPane.showInputDialog(null, "Nhap hoc ki can tim: ", key1);
+							key1 = Integer.parseInt(str1);
+							error2 = false;
+						} catch (NumberFormatException e) {
+							JOptionPane.showMessageDialog(null, "Nhap khong hop le ");
+							error2 = true;
+						}
+					} while (error2 == true);
+					khoa.Max_diemTBHocKy(key1);
 					break;
-				case 7: // Trong moi Khoa, sap xep danh sach Sinh Vien tang dan theo loai va giam dan
+				case 8: // Trong moi Khoa, sap xep danh sach Sinh Vien tang dan theo loai va giam dan
 						// theo nam vao hoc
 					khoa.sortTangLoaiGiamNam();
 					break;
-				case 8: // Trong moi Khoa, thong ke so luong Sinh Vien theo nam vao hoc
+				case 9: // Trong moi Khoa, thong ke so luong Sinh Vien theo nam vao hoc
 					khoa.thongKeSLTheoNamHoc();
+					break;
+				case 10: // Sinh ngau nhien danh sach sinh vien
+					DSSinhVien dssv = new DSSinhVien(genDssv(8));
+					khoa.setTenKhoa(getRandomString(15));
+					khoa.setDsSinhVien(dssv);
 					break;
 				default:
 					// clearScreen();
@@ -243,5 +263,13 @@ public class App {
 			}
 		}
 
+	}
+
+	public static void main(String[] args) throws Exception {
+		System.out.println(ShowMyInfor());
+		// System.out.println(menu());
+
+		Khoa khoa = new Khoa();
+		AppInterface(khoa);
 	}
 }

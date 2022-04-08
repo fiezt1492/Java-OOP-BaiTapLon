@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 
-public class Khoa implements IO_Interface, Comparable<Khoa> {
+public class Khoa implements IO_Interface {
 	protected String tenKhoa;
 	protected DSSinhVien dsSinhVien;
 	public static Hashtable<Integer, Integer> DS_SLSVTheoNamHoc = new Hashtable<Integer, Integer>();
@@ -41,16 +41,24 @@ public class Khoa implements IO_Interface, Comparable<Khoa> {
 
 	public void setDsSinhVien(DSSinhVien dsSinhVien) {
 		this.dsSinhVien = dsSinhVien;
+		for (SinhVien s : dsSinhVien.getDssv()) {
+			increaseSL(s.getNamHoc());
+		}
 	}
 
 	public static Hashtable<Integer, Integer> getDS_SLSVTheoNamHoc() {
 		return DS_SLSVTheoNamHoc;
 	}
 
-	// public void increaseSL(int key) {
-	// if ()
-	// this.DS_SLSVTheoNamHoc(key, this.DS_SLSVTheoNamHoc.get(key) + 1);
-	// }
+	public static void increaseSL(int key) {
+		Integer sl = DS_SLSVTheoNamHoc.get(key);
+        if (sl == null) {
+            DS_SLSVTheoNamHoc.put(key, 1);
+        } else if (sl > 0) {
+            DS_SLSVTheoNamHoc.put(key, sl + 1);
+        }
+	}
+
 	@Override
 	public int input() {
 		// TODO Auto-generated method stub
@@ -77,24 +85,9 @@ public class Khoa implements IO_Interface, Comparable<Khoa> {
 		// TODO Auto-generated method stub
 		String res = "";
 		res += "Ten Khoa: " + getTenKhoa() + "\n";
-		res += "Danh sach sinh vien: " + getDsSinhVien().output() + "\n";
+		res += "[Danh sach sinh vien]\n" + getDsSinhVien().list() + "\n";
 		return res;
 	}
-
-	@Override
-	public int compareTo(Khoa o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public double getDTB_SVTaiChuc(SinhVien sv, int tenHocKy) {
-		if (sv.isSVTaiChuc()) {
-			return sv.getKqHt().get(tenHocKy);
-		}
-		return -1;
-	}
-
-	// && tenHocKy <= sv.getDsKQHocTap().getTenHocKy()
 
 	public int tong_SVTaiChuc() {
 		int count = 0;
@@ -116,12 +109,16 @@ public class Khoa implements IO_Interface, Comparable<Khoa> {
 		// tim max
 		// getDiemTBTheoHocKy(int tenHocKy)
 		// Arraylist
+		if (dsSinhVien.getDssv().isEmpty()) {
+			System.out.println("Danh sach rong");
+			return;
+		}
 		DSSinhVien dsSVMaxDTB = new DSSinhVien();
 		SinhVien svMax = dsSinhVien.getDssv().get(0);
 		double diem, diemMax;
 		for (SinhVien s : dsSinhVien.getDssv()) {
-			diem = s.getKqHt().get(hocKy);
-			diemMax = svMax.getKqHt().get(hocKy);
+			diem = (s.getKqHt().get(hocKy) == null) ? 0 : s.getKqHt().get(hocKy);
+			diemMax = (svMax.getKqHt().get(hocKy) == null) ? 0 : svMax.getKqHt().get(hocKy);
 
 			if (diem == diemMax)
 				dsSVMaxDTB.add(s);
@@ -134,7 +131,7 @@ public class Khoa implements IO_Interface, Comparable<Khoa> {
 			}
 		}
 		dsSVMaxDTB.add(svMax);
-		System.out.println("Danh sach sinh vien co diem trung binh hoc ki cao nhat");
+		System.out.println("Danh sach sinh vien co diem trung binh hoc ki cao nhat cua hoc ky " + hocKy);
 		System.out.println(dsSVMaxDTB.output());
 	}
 
@@ -154,7 +151,11 @@ public class Khoa implements IO_Interface, Comparable<Khoa> {
 	}
 
 	public void thongKeSLTheoNamHoc() {
-
+		if (dsSinhVien.getDssv().isEmpty()) {
+			System.out.println("Danh sach rong");
+			return;
+		}
+		
 		System.out.println("Danh sach So luong Sinh Vien theo nam hoc");
 
 		for (int key : getDS_SLSVTheoNamHoc().keySet()) {

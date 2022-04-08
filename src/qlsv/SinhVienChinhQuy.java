@@ -22,8 +22,8 @@ public class SinhVienChinhQuy extends SinhVien {
 		this.kqHt = (HashMap<Integer, Double>) sinhvienchinhquy.kqHt.clone();
 	}
 
-	@Override
-	public String row() {
-		return String.format("%10s | %-30s | %10s | ");
-	}
+	// @Override
+	// public String row() {
+	// 	return String.format("%10d | %-30s | %15s | %7d | %4.2f | %20s", maSV, hoTen, ngaySinh, namHoc, diemDV, "null");
+	// }
 }

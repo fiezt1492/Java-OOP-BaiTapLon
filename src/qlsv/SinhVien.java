@@ -59,6 +59,10 @@ public abstract class SinhVien implements IO_Interface {
         return ngaySinh;
     }
 
+    public String getNgaySinhString() {
+        return ngaySinh.output();
+    }
+
     public void setNgaySinh(NgayThangNam ngaySinh) {
         this.ngaySinh = ngaySinh;
     }
@@ -149,18 +153,13 @@ public abstract class SinhVien implements IO_Interface {
         if (kqHtInput(hoTenTemp) == -1)
             return -1;
 
-        Integer sl = Khoa.getDS_SLSVTheoNamHoc().get(this.namHoc);
-        if (sl == null) {
-            Khoa.getDS_SLSVTheoNamHoc().put(this.namHoc, 1);
-        } else if (sl > 0) {
-            Khoa.getDS_SLSVTheoNamHoc().put(this.namHoc, sl + 1);
-        }
-
         this.maSV = maSVTemp;
         this.hoTen = hoTenTemp;
         this.ngaySinh = new NgayThangNam(ngaySinhTemp);
         this.diemDV = diemDVTemp;
         this.namHoc = namHocTemp;
+
+        Khoa.increaseSL(this.namHoc);
 
         return 0;
     }
@@ -173,8 +172,9 @@ public abstract class SinhVien implements IO_Interface {
             int key = 0;
             double value = 0;
             do {
+                error = false;
                 try {
-                    str = JOptionPane.showInputDialog(null, kqHtOuput() + "\n----------\nNhap hoc ki: ", key);
+                    str = JOptionPane.showInputDialog(null, kqHtOuput() + "\nNhap hoc ki: ", key);
                     if (str == null)
                         return -1;
                     key = Integer.parseInt(str);
@@ -191,9 +191,10 @@ public abstract class SinhVien implements IO_Interface {
             } while (error == true);
 
             do {
+                error = false;
                 try {
                     str = JOptionPane.showInputDialog(null,
-                            String.format("%s\n----------\nNhap diem trung binh hoc ky %d: ", kqHtOuput(), key),
+                            String.format("%s\nNhap diem trung binh hoc ky %d: ", kqHtOuput(), key),
                             "0");
                     if (str == null)
                         return -1;
@@ -219,17 +220,22 @@ public abstract class SinhVien implements IO_Interface {
     }
 
     public String kqHtOuput() {
-        String res = "Hoc Ky | Diem\n";
-        int i = 1;
+        String res = "Hoc Ky | Diem\n-------------\n";
         for (Map.Entry d : kqHt.entrySet()) {
             res += String.format("%6d | %4.2f", d.getKey(), d.getValue());
-            if (i++ < kqHt.size())
-                res += "\n";
+            res += "\n";
         }
-        return res;
+        return res + "-------------";
     }
 
-    abstract public String row();
+    // abstract public String row();
+
+    public double getDTB_SVTaiChuc(int tenHocKy) {
+        if (isSVTaiChuc()) {
+            return getKqHt().get(tenHocKy) == null ? 0 : getKqHt().get(tenHocKy);
+        }
+        return -1;
+    }
 
     public String output() {
         // TODO Auto-generated method stub
@@ -240,7 +246,7 @@ public abstract class SinhVien implements IO_Interface {
         res += "Ngay sinh: " + getNgaySinh().output() + "\n";
         res += "Nam vao hoc: " + getNamHoc() + "\n";
         res += "Diem dau vao: " + getDiemDV() + "\n";
-        res += "Danh sach ket qua: \n" + kqHtOuput() + "\n";
+        res += "[Danh sach ket qua]\n" + kqHtOuput() + "\n";
         return res;
     }
 

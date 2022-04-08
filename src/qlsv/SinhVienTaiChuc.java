@@ -35,10 +35,10 @@ public class SinhVienTaiChuc extends SinhVien {
 		this.noiLKDaoTao = noiLKDaoTao;
 	}
 
-	@Override
-	public String row() {
-		return String.format("%10s | %-30s | %10s | ");
-	}
+	// @Override
+	// public String row() {
+	// 	return String.format("%10s | %-30s | %10s | ");
+	// }
 
 	@Override
 	public int input() {
