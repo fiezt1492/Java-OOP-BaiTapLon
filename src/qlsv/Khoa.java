@@ -41,6 +41,7 @@ public class Khoa implements IO_Interface {
 
 	public void setDsSinhVien(DSSinhVien dsSinhVien) {
 		this.dsSinhVien = dsSinhVien;
+		DS_SLSVTheoNamHoc.clear();
 		for (SinhVien s : dsSinhVien.getDssv()) {
 			increaseSL(s.getNamHoc());
 		}
